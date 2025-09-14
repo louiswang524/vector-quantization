@@ -4,16 +4,27 @@
 [![Python 3.8+](https://img.shields.io/badge/python-3.8+-blue.svg)](https://www.python.org/downloads/)
 [![PyTorch](https://img.shields.io/badge/PyTorch-1.12+-orange.svg)](https://pytorch.org/)
 
-A comprehensive educational implementation of Vector Quantization techniques, including VQ-VAE, RQ-VAE, and RQ-K-means, designed to help students and researchers understand these fundamental concepts in discrete representation learning.
+A comprehensive educational implementation of representation learning techniques, including AutoEncoders, VAE, VQ-VAE, RQ-VAE, and RQ-K-means, designed to help students and researchers understand these fundamental concepts in modern machine learning.
 
 ## 🎓 Educational Objectives
 
 This repository is designed to teach you:
+
+### Foundation Concepts
+- **AutoEncoder fundamentals** and the encoding-decoding paradigm
+- **Variational AutoEncoders (VAE)** and probabilistic latent spaces
+- **Reparameterization trick** and variational inference basics
+
+### Vector Quantization Techniques
 - **Vector Quantization fundamentals** and the straight-through estimator
 - **VQ-VAE architecture** and discrete latent representations
 - **Residual Quantization principles** and hierarchical discrete representations
 - **RQ-K-means clustering** and multi-stage quantization
-- **Practical implementation details** with extensive code comments
+
+### Practical Skills
+- **Implementation details** with extensive code comments
+- **Training techniques** and optimization strategies
+- **Analysis methods** for latent space interpretation
 - **Real-world applications** in compression and representation learning
 
 ## 📋 Table of Contents
@@ -31,25 +42,67 @@ This repository is designed to teach you:
 
 ## 🔍 Overview
 
-Vector Quantization (VQ) is a fundamental technique in signal processing and machine learning that maps continuous vectors to discrete representations. This repository implements several key variants:
+This repository provides a complete educational journey through representation learning, from basic autoencoders to advanced vector quantization techniques.
 
-### 🏗️ Architecture Overview
+### 🏗️ Architecture Progression
 
 ```
-Input Data → Encoder → Vector Quantizer → Decoder → Reconstructed Data
-                           ↓
-                    Discrete Codes
+1. AutoEncoder:        Input → Encoder → Latent → Decoder → Output
+2. VAE:               Input → Encoder → (μ,σ²) → Sample → Decoder → Output
+3. VQ-VAE:            Input → Encoder → Quantizer → Decoder → Output
+4. RQ-VAE:            Input → Encoder → Multi-VQ → Decoder → Output
 ```
 
 ### 🎯 Key Features
 
 - **Educational Focus**: Extensive comments explaining theory and implementation
-- **Multiple Techniques**: VQ, VQ-VAE, RQ-VAE, and RQ-K-means
+- **Progressive Learning**: From basic AutoEncoders to advanced VQ techniques
+- **Foundation Models**: AutoEncoder and VAE as stepping stones
+- **Advanced Techniques**: VQ-VAE, RQ-VAE, and RQ-K-means
 - **Interactive Examples**: Hands-on demonstrations with visualizations
 - **Performance Analysis**: Comprehensive comparison and analysis tools
 - **Research-Ready**: Clean, modular code suitable for research extensions
 
 ## 📐 Mathematical Background
+
+### AutoEncoder (AE)
+
+AutoEncoders learn compressed representations by minimizing reconstruction error:
+
+```
+Encoder:    z = f_enc(x)
+Decoder:    x̂ = f_dec(z)
+Loss:       L = ||x - x̂||²
+```
+
+Where:
+- `x` is the input data
+- `z` is the latent representation (bottleneck)
+- `x̂` is the reconstructed output
+
+### Variational AutoEncoder (VAE)
+
+VAEs extend autoencoders with probabilistic latent representations:
+
+**Encoder (Recognition Model):**
+```
+q_φ(z|x) = N(μ_φ(x), σ²_φ(x))
+```
+
+**Decoder (Generative Model):**
+```
+p_θ(x|z) = N(f_θ(z), I)
+```
+
+**ELBO Loss:**
+```
+L = 𝔼[||x - x̂||²] + β × KL[q_φ(z|x)||p(z)]
+```
+
+**Reparameterization Trick:**
+```
+z = μ + σ ⊙ ε, where ε ~ N(0,I)
+```
 
 ### Vector Quantization (VQ)
 
@@ -128,6 +181,59 @@ pip install torch torchvision numpy matplotlib scikit-learn tqdm Pillow tensorbo
 ```
 
 ## ⚡ Quick Start
+
+### AutoEncoder Basics
+
+```python
+import torch
+from vector_quantization import AutoEncoder
+
+# Create autoencoder
+model = AutoEncoder(
+    in_channels=3,        # RGB images
+    latent_dim=128,       # Compressed representation size
+    hidden_dims=[32, 64], # Network architecture
+    input_size=32         # 32x32 images
+)
+
+# Sample images
+images = torch.randn(16, 3, 32, 32)
+
+# Forward pass
+outputs = model(images)
+reconstructed = outputs['reconstructed']
+latent_codes = outputs['latent']
+loss = outputs['loss']
+
+print(f"Input shape: {images.shape}")
+print(f"Latent shape: {latent_codes.shape}")
+print(f"Reconstruction loss: {loss:.4f}")
+```
+
+### Variational AutoEncoder
+
+```python
+from vector_quantization import VAE
+
+# Create VAE
+vae = VAE(
+    in_channels=3,
+    latent_dim=64,
+    hidden_dims=[32, 64],
+    input_size=32,
+    beta=1.0  # KL weight (β-VAE)
+)
+
+# Forward pass
+outputs = vae(images)
+print(f"Total loss: {outputs['total_loss']:.4f}")
+print(f"Reconstruction: {outputs['reconstruction_loss']:.4f}")
+print(f"KL divergence: {outputs['kl_loss']:.4f}")
+
+# Generate new samples
+new_samples = vae.sample(num_samples=8)
+print(f"Generated samples shape: {new_samples.shape}")
+```
 
 ### Basic Vector Quantization
 
@@ -215,7 +321,33 @@ print(f"Reconstruction error: {rq_kmeans.calculate_reconstruction_error(X):.6f}"
 
 ## 🛠️ Techniques Implemented
 
-### 1. Vector Quantization (`VectorQuantizer`)
+### 1. AutoEncoder (`AutoEncoder`)
+
+**Foundation Architecture:**
+- **Encoder**: Convolutional layers with progressive downsampling
+- **Bottleneck**: Compressed latent representation forcing information compression
+- **Decoder**: Transposed convolutions for reconstruction
+
+**Key Features:**
+- Deterministic latent representations
+- Configurable compression ratios
+- Latent space analysis and interpolation
+- Comprehensive reconstruction metrics
+
+### 2. Variational AutoEncoder (`VAE`)
+
+**Probabilistic Architecture:**
+- **Probabilistic Encoder**: Outputs mean and variance parameters
+- **Reparameterization Trick**: Enables backpropagation through sampling
+- **Generative Decoder**: Reconstructs from sampled latent codes
+
+**Key Features:**
+- Probabilistic latent space with KL regularization
+- Generative capability (sample new data)
+- β-VAE for disentanglement studies
+- ELBO optimization and analysis
+
+### 3. Vector Quantization (`VectorQuantizer`)
 
 **Core Implementation:**
 - Exponential Moving Average (EMA) for codebook updates
@@ -228,7 +360,7 @@ print(f"Reconstruction error: {rq_kmeans.calculate_reconstruction_error(X):.6f}"
 - Multiple initialization strategies
 - Comprehensive metrics (perplexity, utilization, etc.)
 
-### 2. VQ-VAE (`VQVAE`)
+### 4. VQ-VAE (`VQVAE`)
 
 **Architecture Components:**
 - **Encoder**: Convolutional layers with residual blocks
@@ -240,7 +372,7 @@ print(f"Reconstruction error: {rq_kmeans.calculate_reconstruction_error(X):.6f}"
 - Vector quantization loss
 - Commitment loss
 
-### 3. RQ-VAE (`RQVAE`)
+### 5. RQ-VAE (`RQVAE`)
 
 **Hierarchical Quantization:**
 - Multiple VQ layers applied sequentially
@@ -248,7 +380,7 @@ print(f"Reconstruction error: {rq_kmeans.calculate_reconstruction_error(X):.6f}"
 - Improved reconstruction quality
 - Analysis tools for hierarchical representations
 
-### 4. RQ-K-means (`RQKMeans`)
+### 6. RQ-K-means (`RQKMeans`)
 
 **Multi-Stage Clustering:**
 - Iterative K-means on residuals
@@ -260,25 +392,43 @@ print(f"Reconstruction error: {rq_kmeans.calculate_reconstruction_error(X):.6f}"
 
 ### Interactive Demonstrations
 
-1. **Basic VQ Demo** (`examples/basic_vq_demo.py`)
+#### Foundation Models
+
+1. **AutoEncoder Demo** (`examples/autoencoder_demo.py`)
+   - AutoEncoder fundamentals and training
+   - Latent dimension effects on compression
+   - Latent space analysis and interpolation
+   - Compression vs quality trade-offs
+
+2. **VAE Demo** (`examples/vae_demo.py`)
+   - Variational AutoEncoder concepts
+   - Probabilistic latent spaces
+   - Reparameterization trick demonstration
+   - VAE vs AutoEncoder comparison
+   - Generative sampling capabilities
+   - β-VAE disentanglement studies
+
+#### Vector Quantization Techniques
+
+3. **Basic VQ Demo** (`examples/basic_vq_demo.py`)
    - Fundamental vector quantization concepts
    - Codebook size effects
    - Training dynamics visualization
    - 2D data examples with plots
 
-2. **VQ-VAE Image Demo** (`examples/vqvae_image_demo.py`)
+4. **VQ-VAE Image Demo** (`examples/vqvae_image_demo.py`)
    - Complete VQ-VAE training pipeline
    - Synthetic image generation
    - Reconstruction quality analysis
    - Discrete code visualization
 
-3. **RQ-VAE Comparison** (`examples/rqvae_comparison.py`)
+5. **RQ-VAE Comparison** (`examples/rqvae_comparison.py`)
    - VQ-VAE vs RQ-VAE comparison
    - Hierarchical quantization analysis
    - Performance benchmarking
    - Multi-level reconstruction visualization
 
-4. **RQ-K-means Demo** (`examples/rq_kmeans_demo.py`)
+6. **RQ-K-means Demo** (`examples/rq_kmeans_demo.py`)
    - Comprehensive RQ-K-means analysis
    - Multiple dataset comparisons
    - Parameter sensitivity study
@@ -289,18 +439,62 @@ print(f"Reconstruction error: {rq_kmeans.calculate_reconstruction_error(X):.6f}"
 ```bash
 cd examples
 
-# Basic concepts
-python basic_vq_demo.py
+# Foundation models
+python autoencoder_demo.py     # Learn AutoEncoder basics
+python vae_demo.py            # Learn VAE and generative modeling
 
-# Image applications
-python vqvae_image_demo.py
-
-# Advanced comparisons
-python rqvae_comparison.py
-python rq_kmeans_demo.py
+# Vector quantization techniques
+python basic_vq_demo.py       # Basic VQ concepts
+python vqvae_image_demo.py    # VQ-VAE for images
+python rqvae_comparison.py    # RQ-VAE vs VQ-VAE
+python rq_kmeans_demo.py      # RQ-K-means clustering
 ```
 
+### Recommended Learning Path
+
+1. **Start with foundations:** `autoencoder_demo.py` → `vae_demo.py`
+2. **Learn vector quantization:** `basic_vq_demo.py` → `vqvae_image_demo.py`
+3. **Explore advanced techniques:** `rqvae_comparison.py` → `rq_kmeans_demo.py`
+
 ## 📖 API Reference
+
+### AutoEncoder
+
+```python
+AutoEncoder(
+    in_channels: int = 3,           # Input channels (e.g., 3 for RGB)
+    latent_dim: int = 128,          # Latent space dimension
+    hidden_dims: List[int] = [32, 64, 128, 256],  # Architecture
+    input_size: int = 32            # Input image size (square)
+)
+```
+
+**Methods:**
+- `forward(x)` → `{'reconstructed', 'latent', 'loss'}`
+- `encode(x)` → `latent_codes`
+- `decode(z)` → `reconstructed_images`
+- `interpolate_in_latent_space(x1, x2, num_steps)` → `interpolations`
+- `calculate_reconstruction_error(x)` → `error_metrics`
+
+### VAE
+
+```python
+VAE(
+    in_channels: int = 3,
+    latent_dim: int = 128,
+    hidden_dims: List[int] = [32, 64, 128, 256],
+    input_size: int = 32,
+    beta: float = 1.0               # KL weight (β-VAE)
+)
+```
+
+**Methods:**
+- `forward(x)` → `{'reconstructed', 'mu', 'logvar', 'z', 'reconstruction_loss', 'kl_loss', 'total_loss'}`
+- `encode(x)` → `(mu, logvar)`
+- `decode(z)` → `reconstructed_images`
+- `sample(num_samples)` → `generated_samples`
+- `interpolate(x1, x2, num_steps)` → `interpolations`
+- `reparameterize(mu, logvar)` → `sampled_z`
 
 ### VectorQuantizer
 
