@@ -168,8 +168,8 @@ Final: X_approx = Σᵢ Cᵢ[assignments_i]
 ### Install from Source
 
 ```bash
-git clone https://github.com/yourusername/vector-quantization-educational.git
-cd vector-quantization-educational
+git clone https://github.com/louiswang524/vector-quantization.git
+cd vector-quantization
 pip install -r requirements.txt
 pip install -e .
 ```
