@@ -157,15 +157,21 @@ Final: X_approx = Σᵢ Cᵢ[assignments_i]
 
 ## 🚀 Installation
 
-### Requirements
+### Option 1: Install from GitHub (Recommended)
 
-- Python 3.8+
-- PyTorch 1.12+
-- NumPy 1.21+
-- Matplotlib 3.5+
-- scikit-learn 1.1+
+```bash
+pip install git+https://github.com/louiswang524/vector-quantization.git
+```
 
-### Install from Source
+### Option 2: Clone and Install
+
+```bash
+git clone https://github.com/louiswang524/vector-quantization.git
+cd vector-quantization
+pip install -e .
+```
+
+### Option 3: Manual Installation
 
 ```bash
 git clone https://github.com/louiswang524/vector-quantization.git
@@ -174,11 +180,27 @@ pip install -r requirements.txt
 pip install -e .
 ```
 
-### Dependencies
+### Requirements
+
+- Python 3.8+
+- PyTorch 1.12+
+- NumPy 1.21+
+- Matplotlib 3.5+
+- scikit-learn 1.1+
+
+### Verify Installation
+
+After installation, test that everything works:
 
 ```bash
-pip install torch torchvision numpy matplotlib scikit-learn tqdm Pillow tensorboard
+# Test the installation
+vq-test
+
+# Or run manually
+python -c "from vector_quantization import VQPipeline; print('✅ Installation successful!')"
 ```
+
+**Having installation issues?** Check the detailed [Installation Guide](INSTALLATION.md) for troubleshooting.
 
 ## ⚡ Quick Start
 

@@ -1,0 +1,70 @@
+[build-system]
+requires = ["setuptools>=45", "wheel", "setuptools_scm[toml]>=6.2"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "vector-quantization-educational"
+description = "Educational implementation of Vector Quantization, VQ-VAE, RQ-VAE, and RQ-K-means with configurable pipeline system"
+readme = "README.md"
+requires-python = ">=3.8"
+license = {text = "MIT"}
+authors = [
+    {name = "Educational Repository"},
+]
+keywords = ["vector-quantization", "vq-vae", "machine-learning", "representation-learning", "educational"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Education",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+    "Topic :: Education",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+]
+dependencies = [
+    "torch>=1.12.0",
+    "torchvision>=0.13.0",
+    "numpy>=1.21.0",
+    "matplotlib>=3.5.0",
+    "scikit-learn>=1.1.0",
+    "tqdm>=4.64.0",
+    "Pillow>=9.0.0",
+    "tensorboard>=2.9.0",
+]
+dynamic = ["version"]
+
+[project.urls]
+Homepage = "https://github.com/louiswang524/vector-quantization"
+Repository = "https://github.com/louiswang524/vector-quantization.git"
+Issues = "https://github.com/louiswang524/vector-quantization/issues"
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=6.0",
+    "pytest-cov",
+    "black",
+    "flake8",
+    "mypy",
+]
+docs = [
+    "sphinx>=3.0",
+    "sphinx-rtd-theme",
+]
+
+[project.scripts]
+vq-test = "vector_quantization.test_installation:main"
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools_scm]
+write_to = "src/vector_quantization/_version.py"

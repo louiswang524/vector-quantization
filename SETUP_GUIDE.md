@@ -51,6 +51,8 @@ cd vector-quantization-educational
 pip install -e .
 ```
 
+**Note**: This installs the package in "editable" mode, so changes to the source code are immediately reflected.
+
 ### Option 2: Manual Path Setup
 
 If you can't install the package, add this to your Python scripts:
@@ -77,11 +79,17 @@ python3 install_local.py
 
 ## 🧪 Testing Your Setup
 
-Run the quick test to verify everything works:
-
+### Test 1: Quick functionality test (from source directory)
 ```bash
 python3 quick_test.py
 ```
+
+### Test 2: Installation test (run from any directory after installation)
+```bash
+python3 test_installation.py
+```
+
+This tests that the package can be imported correctly after installation.
 
 Expected output:
 ```
