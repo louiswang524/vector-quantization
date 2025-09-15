@@ -103,6 +103,12 @@ class VAEEncoder(nn.Module):
         self.final_spatial_size = input_size // (2 ** len(hidden_dims))
         self.conv_output_size = hidden_dims[-1] * self.final_spatial_size * self.final_spatial_size
 
+        # Validate that the spatial size is reasonable
+        if self.final_spatial_size < 1:
+            raise ValueError(f"Too many downsampling layers for input size {input_size}. "
+                           f"With {len(hidden_dims)} layers, final size would be {self.final_spatial_size}. "
+                           f"Reduce the number of hidden layers or increase input size.")
+
         # VAE-specific: separate linear layers for mean and log-variance
         # This is the key difference from deterministic autoencoders
         self.fc_mu = nn.Linear(self.conv_output_size, latent_dim)      # Mean parameters μ
@@ -171,8 +177,15 @@ class VAEDecoder(nn.Module):
         self.output_size = output_size
 
         # Calculate spatial dimensions
-        self.start_spatial_size = output_size // (2 ** (len(hidden_dims) - 1))
+        # Number of stride-2 conv layers = len(hidden_dims) (not len-1)
+        self.start_spatial_size = output_size // (2 ** len(hidden_dims))
         self.fc_input_size = hidden_dims[0] * self.start_spatial_size * self.start_spatial_size
+
+        # Validate dimensions
+        if self.start_spatial_size < 1:
+            raise ValueError(f"Too many upsampling layers for output size {output_size}. "
+                           f"With {len(hidden_dims)} layers, start size would be {self.start_spatial_size}. "
+                           f"Reduce the number of hidden layers or increase output size.")
 
         # Fully connected layer: latent → feature map
         self.fc_decode = nn.Linear(latent_dim, self.fc_input_size)
