@@ -101,6 +101,12 @@ class AutoEncoderEncoder(nn.Module):
         self.final_spatial_size = input_size // (2 ** len(hidden_dims))
         self.conv_output_size = hidden_dims[-1] * self.final_spatial_size * self.final_spatial_size
 
+        # Validate that the spatial size is reasonable
+        if self.final_spatial_size < 1:
+            raise ValueError(f"Too many downsampling layers for input size {input_size}. "
+                           f"With {len(hidden_dims)} layers, final size would be {self.final_spatial_size}. "
+                           f"Reduce the number of hidden layers or increase input size.")
+
         # Final fully connected layer to produce latent representation
         # This creates the bottleneck that forces compression
         self.fc_latent = nn.Linear(self.conv_output_size, latent_dim)
@@ -170,8 +176,15 @@ class AutoEncoderDecoder(nn.Module):
 
         # Calculate starting spatial size for reconstruction
         # This should match the encoder's final spatial size
-        self.start_spatial_size = output_size // (2 ** (len(hidden_dims) - 1))
+        # Number of stride-2 conv layers = len(hidden_dims) (not len-1)
+        self.start_spatial_size = output_size // (2 ** len(hidden_dims))
         self.fc_input_size = hidden_dims[0] * self.start_spatial_size * self.start_spatial_size
+
+        # Validate dimensions
+        if self.start_spatial_size < 1:
+            raise ValueError(f"Too many upsampling layers for output size {output_size}. "
+                           f"With {len(hidden_dims)} layers, start size would be {self.start_spatial_size}. "
+                           f"Reduce the number of hidden layers or increase output size.")
 
         # First fully connected layer: expand latent to feature map
         # This reverses the encoder's final compression step
