@@ -1,0 +1,25 @@
+{
+  "name": "Image_ViT_RQVAE",
+  "modality": "image",
+  "encoder_type": "vit",
+  "vq_method": "rq_vae",
+  "input_dim": [3, 64, 64],
+  "embedding_dim": 256,
+  "num_embeddings": 1024,
+  "commitment_cost": 0.25,
+  "learning_rate": 0.0001,
+  "batch_size": 32,
+  "encoder_config": {
+    "patch_size": 8,
+    "num_layers": 6,
+    "num_heads": 8,
+    "mlp_ratio": 4.0,
+    "dropout": 0.1
+  },
+  "vq_config": {
+    "num_quantizers": 4,
+    "hidden_dims": [128, 256]
+  },
+  "description": "Vision Transformer with Residual Quantization for fine-grained image semantics",
+  "use_case": "Hierarchical image understanding with patch-based attention"
+}

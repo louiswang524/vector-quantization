@@ -1,0 +1,25 @@
+{
+  "name": "Text_BERT_VQVAE",
+  "modality": "text",
+  "encoder_type": "bert_like",
+  "vq_method": "vq_vae",
+  "input_dim": 10000,
+  "embedding_dim": 256,
+  "num_embeddings": 1024,
+  "commitment_cost": 0.25,
+  "learning_rate": 0.0001,
+  "batch_size": 32,
+  "encoder_config": {
+    "d_model": 768,
+    "num_layers": 12,
+    "num_heads": 12,
+    "intermediate_size": 3072,
+    "max_position_embeddings": 512,
+    "dropout": 0.1
+  },
+  "vq_config": {
+    "hidden_dims": [128, 256]
+  },
+  "description": "BERT-like encoder with VQ-VAE for contextual text representations",
+  "use_case": "Contextual text understanding with discrete semantic tokens"
+}

@@ -1,0 +1,23 @@
+{
+  "name": "Video_3DCNN_RQVAE",
+  "modality": "video",
+  "encoder_type": "cnn_3d",
+  "vq_method": "rq_vae",
+  "input_dim": [3, 16, 32, 32],
+  "embedding_dim": 256,
+  "num_embeddings": 1024,
+  "commitment_cost": 0.25,
+  "learning_rate": 0.0001,
+  "batch_size": 16,
+  "encoder_config": {
+    "hidden_dims": [64, 128, 256],
+    "kernel_size": [3, 3, 3],
+    "temporal_stride": 2
+  },
+  "vq_config": {
+    "num_quantizers": 4,
+    "hidden_dims": [128, 256]
+  },
+  "description": "3D CNN with Residual Quantization for hierarchical video semantics",
+  "use_case": "Spatiotemporal video understanding with multi-level representations"
+}
